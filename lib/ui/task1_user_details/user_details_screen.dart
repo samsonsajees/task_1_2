@@ -57,7 +57,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: null,
-                  hintText: 'User ID',
+                  hintText: StaticValues.userIdHint,
                   contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -68,7 +68,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     borderSide: BorderSide(color: Colors.green),
                   ),
                 ),
-                validator: RequiredValidator(errorText: 'User ID is required').call,
+                validator: RequiredValidator(errorText: StaticValues.userIdRequiredError).call,
               ),
             ),
             const SizedBox(height: 20.0),

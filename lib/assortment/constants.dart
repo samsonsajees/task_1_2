@@ -11,6 +11,9 @@ class StaticValues {
   static const String fetchUserLabel = 'Fetch User';
   static const String userIdLabel = 'User ID';
   static const String updateNameButton = 'Update Name to "Caddayn"';
+
+  static const String userIdHint = 'User ID';
+  static const String userIdRequiredError = 'User ID is required';
   
   static const String errorNoUser = 'No user found';
   static const String errorGeneric = 'Something went wrong';
