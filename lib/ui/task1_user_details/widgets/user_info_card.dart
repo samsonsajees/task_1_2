@@ -11,28 +11,25 @@ class UserInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Height maintained at 500 as requested
       height: 500,
       decoration: BoxDecoration(
-        color: AppColors.cardBackground, // Green color from constants
-        borderRadius: BorderRadius.circular(20.0), // Rounded corners for the green card
+        color: AppColors.cardBackground, 
+        borderRadius: BorderRadius.circular(20.0), 
       ),
-      // Padding between the green border and the content (Image/Text)
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center, // Vertically center the content
+        crossAxisAlignment: CrossAxisAlignment.center, 
         children: <Widget>[
-          // ---------------- IMAGE SECTION (Left Half) ----------------
+          // ---------------- IMAGE SECTION ----------------
           Expanded(
             flex: 1,
             child: Padding(
-              // Uniform padding around the image inside the border
-              padding: const EdgeInsets.all(6.0),
+              padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0), // Rounded corners for the image itself
+                borderRadius: BorderRadius.circular(16.0), 
                 child: FastCachedImage(
                   url: user.profileImage,
-                  fit: BoxFit.cover, // Ensures image fills the height/width without distortion
+                  fit: BoxFit.cover, 
                   loadingBuilder: (context, progress) {
                     return const Center(
                       child: CircularProgressIndicator(color: Colors.white),
@@ -49,20 +46,20 @@ class UserInfoCard extends StatelessWidget {
             ),
           ),
 
-          // ---------------- TEXT SECTION (Right Half) ----------------
+          // ---------------- TEXT SECTION ----------------
           Expanded(
             flex: 1,
             child: Padding(
-              // Left padding ensures text doesn't touch the image
               padding: const EdgeInsets.only(left: 16.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, // Vertically centers the text block
+                mainAxisAlignment: MainAxisAlignment.center, 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _buildRow('Name', user.name),
-                  _buildRow('User ID', user.userId.toString()),
-                  _buildRow('Age', user.age?.toString() ?? ''),
-                  _buildRow('Profession', user.profession),
+                  // ✅ FIXED: Using specialized Widgets instead of functions
+                  _UserInfoRow(label: 'Name', value: user.name),
+                  _UserInfoRow(label: 'User ID', value: user.userId.toString()),
+                  _UserInfoRow(label: 'Age', value: user.age?.toString() ?? ''),
+                  _UserInfoRow(label: 'Profession', value: user.profession),
                 ],
               ),
             ),
@@ -71,17 +68,30 @@ class UserInfoCard extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildRow(String label, String value) {
+// --- NEW CLASS: Replaces the _buildRow function ---
+// Satisfies Rule #8: Do not return Widgets from functions 
+// Satisfies Rule #3: Keep widgets small and focused [cite: 52]
+class _UserInfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _UserInfoRow({
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      // Vertical spacing between rows matches the screenshot airiness
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label Column (Fixed width ensures colons align)
+          // Label Column
           SizedBox(
-            width: 85, // Precise width to accommodate "Profession"
+            width: 85,
             child: Text(
               label,
               style: const TextStyle(
@@ -102,7 +112,7 @@ class UserInfoCard extends StatelessWidget {
             ),
           ),
 
-          // Tab Space (The gap requested)
+          // Tab Space
           const SizedBox(width: 20.0), 
 
           // Value Column
