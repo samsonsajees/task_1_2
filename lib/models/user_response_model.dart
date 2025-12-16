@@ -1,5 +1,3 @@
-// lib/models/user_response_model.dart
-
 class UserResponseModel {
   final bool success;
   final UserModel? user;
@@ -12,28 +10,21 @@ class UserResponseModel {
   });
 
   factory UserResponseModel.fromJson(Map<String, dynamic> json) {
-    // --- FIX START ---
-    // 1. Check for the 'error' field FIRST.
-    // This correctly handles user ID which returns an error message.
-    if (json['error'] != null) {
+    // 1. Check the explicit 'success' flag from the API
+    if (json['success'] == false) {
       return UserResponseModel(
         success: false,
+        // Use the actual error message from the API (e.g., "No user found")
         error: json['error'],
       );
     }
 
-    // 2. If 'error' is null, THEN try to parse the user data.
-    try {
-      // This will work for user ID 1.
-      return UserResponseModel(
-        success: true,
-        user: UserModel.fromJson(json['data']['user']),
-      );
-    } catch (e) {
-      // This will fail for user ID 2 (malformed data), which is expected.
-      // The provider will catch this and show "Something went wrong".
-      throw const FormatException('User data is malformed when error is null.');
-    }
+    // 2. If success is true, parse the user data
+    // If data is malformed, this will throw an error, which the Service catches.
+    return UserResponseModel(
+      success: true,
+      user: UserModel.fromJson(json['data']['user']),
+    );
   }
 }
 
@@ -44,7 +35,8 @@ class UserModel {
   final String profession;
   final String profileImage;
 
-  static const String _placeholderImage = 'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Image';
+  static const String _placeholderImage = 
+  'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Image';
 
   UserModel({
     required this.userId,

@@ -36,22 +36,21 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDFDFD), 
+      backgroundColor: AppColors.scaffoldBackground, 
       appBar: AppBar(
         title: const Text(StaticValues.fetchUserLabel),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(40.0),
+          padding: const EdgeInsets.all(40.0), // Reverted
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               
-              // Fixed width Text Field (800px)
               SizedBox(
-                width: 800, 
+                width: 800, // Reverted
                 child: TextField(
                   controller: _userIdController,
                   keyboardType: TextInputType.number,
@@ -60,37 +59,34 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     hintText: StaticValues.userIdHint,
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      borderSide: BorderSide(color: Colors.green),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)), // Reverted
+                      borderSide: BorderSide(color: AppColors.borderColor),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      borderSide: BorderSide(color: Colors.green),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)), // Reverted
+                      borderSide: BorderSide(color: AppColors.borderColor),
                     ),
                   ),
                 ),
               ),
               
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 20.0), // Reverted
               
-              // Button (Text Only, Disabled on Loading)
               SizedBox(
-                width: 120, 
+                width: 120, // Reverted
                 child: Consumer<UserProvider>(
                   builder: (context, provider, child) {
                     return ElevatedButton(
-                      // Button is disabled (null) if loading
                       onPressed: provider.isLoading ? null : _fetchUser,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.buttonBlue,
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor: Colors.grey.shade300,
+                        foregroundColor: AppColors.textWhite,
+                        disabledBackgroundColor: AppColors.disabledButton,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20), // Reverted
                         ),
                       ),
-                      // Always show Text, never show spinner inside button
                       child: const Text(
                         StaticValues.fetchUserLabel,
                         textAlign: TextAlign.center,
@@ -101,14 +97,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 ),
               ),
               
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 30.0), // Reverted
 
-              // Main Content Area
               Consumer<UserProvider>(
                 builder: (BuildContext context, UserProvider provider, Widget? child) {
-                  // CHANGE: Restored the spinner here
                   if (provider.isLoading) {
-                    return const CircularProgressIndicator(); 
+                    return const CircularProgressIndicator();
                   }
 
                   if (provider.errorMessage != null) {
@@ -120,7 +114,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
                   if (provider.user != null) {
                     return SizedBox(
-                      width: 800,
+                      width: 800, // Reverted
                       child: UserInfoCard(user: provider.user!),
                     );
                   }
