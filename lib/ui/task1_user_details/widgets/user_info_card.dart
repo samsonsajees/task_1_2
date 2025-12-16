@@ -24,7 +24,7 @@ class UserInfoCard extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(4.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0), 
                 child: FastCachedImage(
@@ -54,7 +54,7 @@ class UserInfoCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center, 
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children:[
                   // ✅ FIXED: Using specialized Widgets instead of functions
                   _UserInfoRow(label: 'Name', value: user.name),
                   _UserInfoRow(label: 'User ID', value: user.userId.toString()),
@@ -85,7 +85,7 @@ class _UserInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

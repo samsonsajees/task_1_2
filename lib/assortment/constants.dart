@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 
 class StaticValues {
   static const String appName = 'Caddayn Task';
-  static const String task1Title = 'Task 1: API Fetch';
-  static const String task2Title = 'Task 2: Provider State';
-  
-  // NEW: Added specific label as requested
-  static const String providerStateLabel = 'Provider State'; 
+
   
   static const String fetchUserLabel = 'Fetch User';
   static const String userIdLabel = 'User ID';
-  static const String updateNameButton = 'Update Name to "Caddayn"';
 
   static const String userIdHint = 'User ID';
   static const String userIdRequiredError = 'User ID is required';
-  
+  static const String invalidInputError = 'Invalid input'; 
   static const String errorNoUser = 'No user found';
   static const String errorGeneric = 'Something went wrong';
   static const String initialMessage = 'Enter a user id and click button to get the user details';

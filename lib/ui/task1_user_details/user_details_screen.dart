@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:task_1_2/assortment/constants.dart';
 import 'package:task_1_2/provider/user_provider.dart';
@@ -15,7 +14,6 @@ class UserDetailsScreen extends StatefulWidget {
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   late final TextEditingController _userIdController;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -30,11 +28,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   }
 
   void _fetchUser() {
-    if (_formKey.currentState?.validate() ?? false) {
-      final String userId = _userIdController.text.trim();
-      FocusScope.of(context).unfocus();
-      context.read<UserProvider>().fetchUser(userId);
-    }
+    final String userId = _userIdController.text.trim();
+    FocusScope.of(context).unfocus();
+    context.read<UserProvider>().fetchUser(userId);
   }
 
   @override
@@ -45,94 +41,97 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         title: const Text(StaticValues.fetchUserLabel),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Form(
-              key: _formKey,
-              child: TextFormField(
-                controller: _userIdController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: null,
-                  hintText: StaticValues.userIdHint,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: Colors.green),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: Colors.green),
-                  ),
-                ),
-                validator: RequiredValidator(errorText: StaticValues.userIdRequiredError).call,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            
-            // Button (unchanged)
-            Center(
-              child: SizedBox(
-                width: 120, 
-                child: ElevatedButton(
-                  onPressed: _fetchUser,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.buttonBlue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              
+              // Fixed width Text Field (800px)
+              SizedBox(
+                width: 800, 
+                child: TextField(
+                  controller: _userIdController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: null,
+                    hintText: StaticValues.userIdHint,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide(color: Colors.green),
                     ),
                   ),
-                  child: const Text(
-                    StaticValues.fetchUserLabel,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                  ),
                 ),
               ),
-            ),
-            
-            const SizedBox(height: 30.0),
+              
+              const SizedBox(height: 20.0),
+              
+              // Button (Text Only, Disabled on Loading)
+              SizedBox(
+                width: 120, 
+                child: Consumer<UserProvider>(
+                  builder: (context, provider, child) {
+                    return ElevatedButton(
+                      // Button is disabled (null) if loading
+                      onPressed: provider.isLoading ? null : _fetchUser,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.buttonBlue,
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: Colors.grey.shade300,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      // Always show Text, never show spinner inside button
+                      child: const Text(
+                        StaticValues.fetchUserLabel,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              
+              const SizedBox(height: 30.0),
 
-            Consumer<UserProvider>(
-              builder: (BuildContext context, UserProvider provider, Widget? child) {
-                if (provider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+              // Main Content Area
+              Consumer<UserProvider>(
+                builder: (BuildContext context, UserProvider provider, Widget? child) {
+                  // CHANGE: Restored the spinner here
+                  if (provider.isLoading) {
+                    return const CircularProgressIndicator(); 
+                  }
 
-                if (provider.errorMessage != null) {
-                  return Center(
-                    child: MessageDisplay(
+                  if (provider.errorMessage != null) {
+                    return MessageDisplay(
                       message: provider.errorMessage!,
                       isError: true,
-                    ),
-                  );
-                }
+                    );
+                  }
 
-                if (provider.user != null) {
-                  // --- NEW UPDATE: Constrain Max Width ---
-                  // This centers the card and prevents it from growing wider than 900px
-                  return Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 800),
+                  if (provider.user != null) {
+                    return SizedBox(
+                      width: 800,
                       child: UserInfoCard(user: provider.user!),
-                    ),
-                  );
-                  // ----------------------------------------
-                }
+                    );
+                  }
 
-                return const Center(
-                  child: MessageDisplay(
+                  return const MessageDisplay(
                     message: StaticValues.initialMessage,
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

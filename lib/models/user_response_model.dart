@@ -59,7 +59,7 @@ class UserModel {
     return UserModel(
       userId: json['user_id'] ?? 0,
       name: json['name'] ?? '',
-      age: json['age'],
+      age: json['age'] ?? 0,
       profession: json['profession'] ?? '',
       profileImage: imageUrl.isNotEmpty ? imageUrl : _placeholderImage,
     );

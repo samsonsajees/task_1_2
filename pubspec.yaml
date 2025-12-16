@@ -38,8 +38,7 @@ dependencies:
   # State Management [cite: 418]
   provider: ^6.1.2
 
-  # Navigation 
-  go_router: ^14.2.0
+  
 
   # UI Utilities 
   fast_cached_network_image: 1.2.5
